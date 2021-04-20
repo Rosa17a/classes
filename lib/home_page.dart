@@ -49,7 +49,27 @@ class _ArticlsViewState extends State<ArticlsView> {
         body: OrientationBuilder(
             builder: (BuildContext context, Orientation orientation) {
           if (orientation == Orientation.portrait) {
-            return Container();
+            return StreamBuilder(
+              stream: Managemnt().articles.article,
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Article?>?> snapshot) {
+                if (!snapshot.hasData) return Text("Yani Error");
+                return Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (contex, index) {
+                        return ArticleWidget(
+                            article: snapshot.data![index]!,
+                            onTap: () {
+                              selectionIndex = index;
+                              //Yani navigacia
+                            });
+                      }),
+                );
+              },
+            );
           }
           return Row(
             children: [
